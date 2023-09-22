@@ -1,9 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using UnityEngine;
 
 public class EnemyTankMovement : MonoBehaviour
 {
+
+    public List<Transform> _waypoints = new List<Transform> ();
+    private int currentWaypoint;
 
     // The tank will stop moving towards the player once it reaches this distance
     public float m_CloseDistance = 8f;
@@ -25,7 +29,29 @@ public class EnemyTankMovement : MonoBehaviour
     void Update()
     {
         if (m_Follow == false)
-            return;
+        {
+            if (_waypoints.Count <= 0)
+            {
+                if (Vector3.Distance(transform.position, _waypoints[currentWaypoint].position) > 2)
+                {
+                    m_NavAgent.SetDestination(_waypoints[currentWaypoint].position);
+                }
+                else
+                {
+                    currentWaypoint++;
+                }
+            }
+            else
+            {
+                currentWaypoint = 0;
+            }
+
+        }
+            
+
+        else
+        {
+
         // get distance from player to enemy tank
         float distance = (m_Player.transform.position - transform.position).magnitude;
         // if distance is less than stop distance, then stop moving
@@ -41,6 +67,7 @@ public class EnemyTankMovement : MonoBehaviour
         if (m_Turret != null)
         {
             m_Turret.LookAt(m_Player.transform);
+        }
         }
     }
     private void Awake()
