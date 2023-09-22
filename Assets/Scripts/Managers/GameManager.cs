@@ -27,6 +27,12 @@ public class GameManager : MonoBehaviour
     public Text m_MessageText;
     public Text m_TimerText;
 
+    public GameObject m_HighScorePanel;
+    public Text m_HighScoresText;
+
+    public Button m_NewGameButton;
+    public Button m_HighScoresButton;
+
 
     private void Start()
     {
@@ -36,6 +42,10 @@ public class GameManager : MonoBehaviour
         }
         m_TimerText.gameObject.SetActive(false);
         m_MessageText.text = "Get Ready";
+
+        m_HighScorePanel.gameObject.SetActive(false);
+        m_NewGameButton.gameObject.SetActive(false);
+        m_HighScoresButton.gameObject.SetActive(false);
     }
 
     void Update()
@@ -72,6 +82,10 @@ public class GameManager : MonoBehaviour
                 {
                     m_GameState = GameState.GameOver;
                     m_TimerText.gameObject.SetActive(false);
+
+                    m_NewGameButton.gameObject.SetActive(true);
+                    m_HighScoresButton.gameObject.SetActive(true);
+
                     if (IsPlayerDead() == true)
                     {
                         m_MessageText.text = "TRY AGAIN";
@@ -142,6 +156,36 @@ public class GameManager : MonoBehaviour
             }
         }
         return false;
+    }
+
+    public void OnNewGame()
+    {
+        m_NewGameButton.gameObject.SetActive(false);
+        m_HighScoresButton.gameObject.SetActive(false);
+        m_HighScorePanel.SetActive(false);
+        m_gameTime = 0;
+        m_GameState = GameState.Playing;
+        m_TimerText.gameObject.SetActive(true);
+        m_MessageText.text = "";
+        for (int i = 0; i < m_Tanks.Length; i++)
+        {
+            m_Tanks[i].SetActive(true);
+        }
+    }
+
+    public void OnHighScores()
+    {
+        m_MessageText.text = "";
+        m_HighScoresButton.gameObject.SetActive(false);
+        m_HighScorePanel.SetActive(true);
+        string text = "";
+        for (int i = 0; i < m_HighScores.scores.Length; i++)
+        {
+            int seconds = m_HighScores.scores[i];
+            text += string.Format("{0:D2}:{1:D2}\n",
+            (seconds / 60), (seconds % 60));
+        }
+        m_HighScoresText.text = text;
     }
 
 }
