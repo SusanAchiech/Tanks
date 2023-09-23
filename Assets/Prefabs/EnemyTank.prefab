@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1785769302
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1785769303}
+  m_Layer: 0
+  m_Name: Spawn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1785769303
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1785769302}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.13, y: 0.63, z: 1.8}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5933290020314644156}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5933290020314997392
 GameObject:
   m_ObjectHideFlags: 0
@@ -217,10 +248,12 @@ GameObject:
   - component: {fileID: 5933290020315030584}
   - component: {fileID: 5933290020315030585}
   - component: {fileID: 5933290020315030586}
-  - component: {fileID: 5933290020315030588}
+  - component: {fileID: 22268659}
+  - component: {fileID: 22268660}
+  - component: {fileID: 22268661}
   m_Layer: 0
   m_Name: EnemyTank
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -232,7 +265,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5933290020314997398}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 22.846172, y: 0, z: -1.6672597}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -253,7 +286,7 @@ Rigidbody:
   m_Drag: 1
   m_AngularDrag: 1
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 4
   m_CollisionDetection: 0
@@ -305,7 +338,7 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &5933290020315030588
+--- !u!114 &22268659
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -314,11 +347,42 @@ MonoBehaviour:
   m_GameObject: {fileID: 5933290020314997398}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e110f5f0420ceed40955c2391ab3fcf2, type: 3}
+  m_Script: {fileID: 11500000, guid: e751b1d5457a8814d8e0a397c806b694, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _waypoints: []
   m_CloseDistance: 8
-  m_Turret: {fileID: 0}
+  m_Turret: {fileID: 5933290020314644156}
+--- !u!114 &22268660
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5933290020314997398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 363ab493d70b50b488388852ed0c42a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Shell: {fileID: 4161846636151753619, guid: 3dbc50750a86b3c41aac69603fba5c1a, type: 3}
+  m_FireTransform: {fileID: 1785769303}
+  m_LaunchForce: 50
+  m_ShootDelay: 1
+--- !u!114 &22268661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5933290020314997398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77fc452bed9117a4693e5212c53995bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StartingHealth: 100
+  m_ExplosionPrefab: {fileID: 122668, guid: 5f53e2b760f0b2a4c8b27bb6f25b3c90, type: 3}
 --- !u!1 &5933290020314997404
 GameObject:
   m_ObjectHideFlags: 0
@@ -348,7 +412,8 @@ Transform:
   m_LocalPosition: {x: 0.000010554959, y: 1.0796412, z: -0.025321364}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1785769303}
   m_Father: {fileID: 5933290020314644146}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
