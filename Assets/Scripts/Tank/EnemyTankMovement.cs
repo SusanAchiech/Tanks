@@ -30,7 +30,7 @@ public class EnemyTankMovement : MonoBehaviour
     {
         if (m_Follow == false)
         {
-            if (_waypoints.Count <= 0)
+            if (_waypoints.Count > 0)
             {
                 if (Vector3.Distance(transform.position, _waypoints[currentWaypoint].position) > 2)
                 {
@@ -38,17 +38,11 @@ public class EnemyTankMovement : MonoBehaviour
                 }
                 else
                 {
-                    currentWaypoint++;
+                    // Increment the currentWaypoint and loop back to the start if necessary
+                    currentWaypoint = (currentWaypoint + 1) % _waypoints.Count;
                 }
             }
-            else
-            {
-                currentWaypoint = 0;
-            }
-
         }
-            
-
         else
         {
 

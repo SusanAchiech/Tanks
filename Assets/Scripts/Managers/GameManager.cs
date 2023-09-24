@@ -4,13 +4,10 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
-
-
 public class GameManager : MonoBehaviour
 {
-
-    public GameObject[] m_Tanks;
-
+    public GameObject[] m_PlayerTanks; // Array of player tanks
+    public GameObject[] m_EnemyTanks;  // Array of enemy tanks
 
     private float m_gameTime = 0;
     public float GameTime { get { return m_gameTime; } }
@@ -33,19 +30,20 @@ public class GameManager : MonoBehaviour
     public Button m_NewGameButton;
     public Button m_HighScoresButton;
 
+    private GameState m_GameState;
 
     private void Start()
     {
-        for (int i = 0; i < m_Tanks.Length; i++)
+        // Deactivate player tanks
+        for (int i = 0; i < m_PlayerTanks.Length; i++)
         {
-            m_Tanks[i].SetActive(false);
+            m_PlayerTanks[i].SetActive(true);
         }
-        m_TimerText.gameObject.SetActive(false);
-        m_MessageText.text = "Get Ready";
 
-        m_HighScorePanel.gameObject.SetActive(false);
-        m_NewGameButton.gameObject.SetActive(false);
-        m_HighScoresButton.gameObject.SetActive(false);
+        // Other initialization code (if any)
+
+        // Set the initial game state
+        m_GameState = GameState.Start;
     }
 
     void Update()
@@ -56,11 +54,19 @@ public class GameManager : MonoBehaviour
                 if (Input.GetKeyUp(KeyCode.Return) == true)
                 {
                     m_TimerText.gameObject.SetActive(true);
-                    m_MessageText.text = "";
+                    m_MessageText.text = "Get Ready";
                     m_GameState = GameState.Playing;
-                    for (int i = 0; i < m_Tanks.Length; i++)
+
+                    // Activate player tanks
+                    for (int i = 0; i < m_PlayerTanks.Length; i++)
                     {
-                        m_Tanks[i].SetActive(true);
+                        m_PlayerTanks[i].SetActive(true);
+                    }
+
+                    // Activate enemy tanks
+                    for (int i = 0; i < m_EnemyTanks.Length; i++)
+                    {
+                        m_EnemyTanks[i].SetActive(true);
                     }
                 }
                 break;
@@ -68,8 +74,7 @@ public class GameManager : MonoBehaviour
                 bool isGameOver = false;
                 m_gameTime += Time.deltaTime;
                 int seconds = Mathf.RoundToInt(m_gameTime);
-                m_TimerText.text = string.Format("{0:D2}:{1:D2}",
-                (seconds / 60), (seconds % 60));
+                m_TimerText.text = string.Format("{0:D2}:{1:D2}", (seconds / 60), (seconds % 60));
                 if (OneTankLeft() == true)
                 {
                     isGameOver = true;
@@ -106,9 +111,17 @@ public class GameManager : MonoBehaviour
                     m_GameState = GameState.Playing;
                     m_MessageText.text = "";
                     m_TimerText.gameObject.SetActive(true);
-                    for (int i = 0; i < m_Tanks.Length; i++)
+
+                    // Activate player tanks
+                    for (int i = 0; i < m_PlayerTanks.Length; i++)
                     {
-                        m_Tanks[i].SetActive(true);
+                        m_PlayerTanks[i].SetActive(true);
+                    }
+
+                    // Activate enemy tanks
+                    for (int i = 0; i < m_EnemyTanks.Length; i++)
+                    {
+                        m_EnemyTanks[i].SetActive(true);
                     }
                 }
                 break;
@@ -119,44 +132,41 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private GameState m_GameState;
-
-    public GameState State { get { return m_GameState; } }
-
-    private void Awake()
-    {
-        m_GameState = GameState.Start;
-    }
-
-   
-
-
-
-
     private bool OneTankLeft()
     {
-        int numTanksLeft = 0;
-        for (int i = 0; i < m_Tanks.Length; i++)
+        int numPlayerTanksLeft = 0;
+        for (int i = 0; i < m_PlayerTanks.Length; i++)
         {
-            if (m_Tanks[i].activeSelf == true)
+            if (m_PlayerTanks[i].activeSelf == true)
             {
-                numTanksLeft++;
+                numPlayerTanksLeft++;
             }
         }
-        return numTanksLeft <= 1;
+
+        int numEnemyTanksLeft = 0;
+        for (int i = 0; i < m_EnemyTanks.Length; i++)
+        {
+            if (m_EnemyTanks[i].activeSelf == true)
+            {
+                numEnemyTanksLeft++;
+            }
+        }
+
+        return numPlayerTanksLeft <= 1 || numEnemyTanksLeft <= 1;
     }
+
     private bool IsPlayerDead()
     {
-        for (int i = 0; i < m_Tanks.Length; i++)
+        for (int i = 0; i < m_PlayerTanks.Length; i++)
         {
-            if (m_Tanks[i].activeSelf == false)
+            if (m_PlayerTanks[i].activeSelf == false)
             {
-                if (m_Tanks[i].tag == "Player")
-                    return true;
+                return true;
             }
         }
         return false;
     }
+
 
     public void OnNewGame()
     {
@@ -167,9 +177,17 @@ public class GameManager : MonoBehaviour
         m_GameState = GameState.Playing;
         m_TimerText.gameObject.SetActive(true);
         m_MessageText.text = "";
-        for (int i = 0; i < m_Tanks.Length; i++)
+
+        // Activate player tanks
+        for (int i = 0; i < m_PlayerTanks.Length; i++)
         {
-            m_Tanks[i].SetActive(true);
+            m_PlayerTanks[i].SetActive(true);
+        }
+
+        // Activate enemy tanks
+        for (int i = 0; i < m_EnemyTanks.Length; i++)
+        {
+            m_EnemyTanks[i].SetActive(true);
         }
     }
 
@@ -182,10 +200,8 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < m_HighScores.scores.Length; i++)
         {
             int seconds = m_HighScores.scores[i];
-            text += string.Format("{0:D2}:{1:D2}\n",
-            (seconds / 60), (seconds % 60));
+            text += string.Format("{0:D2}:{1:D2}\n", (seconds / 60), (seconds % 60));
         }
         m_HighScoresText.text = text;
     }
-
 }
