@@ -31,19 +31,30 @@ public class GameManager : MonoBehaviour
     public Button m_HighScoresButton;
 
     private GameState m_GameState;
+    public GameState State { get { return m_GameState; } }
+
+    private void Awake()
+    {
+        m_GameState = GameState.Start;
+    }
 
     private void Start()
     {
         // Deactivate player tanks
         for (int i = 0; i < m_PlayerTanks.Length; i++)
         {
-            m_PlayerTanks[i].SetActive(true);
+            m_PlayerTanks[i].SetActive(false);
         }
 
-        // Other initialization code (if any)
+        m_TimerText.gameObject.SetActive(false);
+        m_MessageText.text = "Get Ready";
+
+        m_HighScorePanel.gameObject.SetActive(false);
+        m_NewGameButton.gameObject.SetActive(false);
+        m_HighScoresButton.gameObject.SetActive(false);
 
         // Set the initial game state
-        m_GameState = GameState.Start;
+        //m_GameState = GameState.Start;
     }
 
     void Update()
@@ -54,7 +65,7 @@ public class GameManager : MonoBehaviour
                 if (Input.GetKeyUp(KeyCode.Return) == true)
                 {
                     m_TimerText.gameObject.SetActive(true);
-                    m_MessageText.text = "Get Ready";
+                    m_MessageText.text = "";
                     m_GameState = GameState.Playing;
 
                     // Activate player tanks
@@ -72,17 +83,24 @@ public class GameManager : MonoBehaviour
                 break;
             case GameState.Playing:
                 bool isGameOver = false;
+
+                m_TimerText.gameObject.SetActive(true);
+
                 m_gameTime += Time.deltaTime;
                 int seconds = Mathf.RoundToInt(m_gameTime);
                 m_TimerText.text = string.Format("{0:D2}:{1:D2}", (seconds / 60), (seconds % 60));
+
+
                 if (OneTankLeft() == true)
                 {
                     isGameOver = true;
                 }
+
                 else if (IsPlayerDead() == true)
                 {
                     isGameOver = true;
                 }
+
                 if (isGameOver == true)
                 {
                     m_GameState = GameState.GameOver;
@@ -135,6 +153,7 @@ public class GameManager : MonoBehaviour
     private bool OneTankLeft()
     {
         int numPlayerTanksLeft = 0;
+
         for (int i = 0; i < m_PlayerTanks.Length; i++)
         {
             if (m_PlayerTanks[i].activeSelf == true)
@@ -161,6 +180,7 @@ public class GameManager : MonoBehaviour
         {
             if (m_PlayerTanks[i].activeSelf == false)
             {
+                if (m_PlayerTanks[i].tag == "Player")
                 return true;
             }
         }
@@ -170,13 +190,13 @@ public class GameManager : MonoBehaviour
 
     public void OnNewGame()
     {
-        m_NewGameButton.gameObject.SetActive(false);
-        m_HighScoresButton.gameObject.SetActive(false);
         m_HighScorePanel.SetActive(false);
         m_gameTime = 0;
         m_GameState = GameState.Playing;
         m_TimerText.gameObject.SetActive(true);
-        m_MessageText.text = "";
+        m_MessageText.gameObject.SetActive(false);
+        m_NewGameButton.gameObject.SetActive(false);
+        m_HighScoresButton.gameObject.SetActive(false);
 
         // Activate player tanks
         for (int i = 0; i < m_PlayerTanks.Length; i++)
