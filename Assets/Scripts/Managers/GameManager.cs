@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
@@ -171,7 +172,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        return numPlayerTanksLeft <= 1 || numEnemyTanksLeft <= 1;
+        return numPlayerTanksLeft < 1 || numEnemyTanksLeft < 1;
     }
 
     private bool IsPlayerDead()
@@ -202,6 +203,7 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < m_PlayerTanks.Length; i++)
         {
             m_PlayerTanks[i].SetActive(true);
+            m_PlayerTanks[i].transform.position = new Vector3(0, 0, 0);
         }
 
         // Activate enemy tanks

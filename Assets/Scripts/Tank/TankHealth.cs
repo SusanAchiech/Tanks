@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -60,6 +62,7 @@ public class TankHealth : MonoBehaviour
         // Move the instantiated explosion prefab to the tank's position
         // and turn it on
         m_ExplosionParticles.transform.position = transform.position;
+        transform.position = new Vector3(9999, 9999, 9999);
         m_ExplosionParticles.gameObject.SetActive(true);
         // Play the particle system of the tank exploding
         m_ExplosionParticles.Play();
